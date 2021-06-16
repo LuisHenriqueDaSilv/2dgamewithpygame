@@ -34,61 +34,182 @@ class Player(pygame.sprite.Sprite):
             pygame.image.load('./assets/player/run/Run__009.png').convert_alpha()
         ]
 
+        self.falling_images = [
+            pygame.image.load('./assets/player/falling/Glide_000.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_001.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_002.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_003.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_004.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_005.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_006.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_007.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_008.png').convert_alpha(),
+            pygame.image.load('./assets/player/falling/Glide_009.png').convert_alpha()
+        ]
+
+        self.attacking_images = [
+            pygame.image.load('./assets/player/attack/Attack__000.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__001.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__002.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__003.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__004.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__005.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__006.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__007.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__008.png').convert_alpha(),
+            pygame.image.load('./assets/player/attack/Attack__009.png').convert_alpha()
+        ]
+        
+        self.jumping_images = [
+            pygame.image.load('./assets/player/jump/Jump__000.png').convert_alpha(),
+            pygame.image.load('./assets/player/jump/Jump__001.png').convert_alpha(),
+            pygame.image.load('./assets/player/jump/Jump__002.png').convert_alpha(),
+            pygame.image.load('./assets/player/jump/Jump__003.png').convert_alpha(),
+            pygame.image.load('./assets/player/jump/Jump__004.png').convert_alpha(),
+            pygame.image.load('./assets/player/jump/Jump__005.png').convert_alpha()
+        ]
+
+
         self.image = self.idle_images[0]
         self.rect = pygame.Rect(
             self.gamedata['screen_width'] / 2,
-            self.gamedata['screen_height']-128-70, #screen height - ground height - Player height
-            100,
-            100
+            self.gamedata['screen_height']-128-105, #screen height - ground height - Player height
+            70, 
+            100 
+
         )
 
         self.current_image = 0
         self.xSpeed = 0
-        self.ySpeed = 0
+
+        self.last_button = 'd'
+        self.jumping = False
+        self.jump_covered = 0
+        self.jump_limit = 200
+        self.jump_speed = 20
+
+        self.attacking = False
+        self.attacking_frames = 0
         
 
-    def update(self):
+    def update(self, falling=False):
+
+
+        if self.jumping:
+
+            if self.current_image < 5:
+                self.current_image += 1
+
+            if self.jump_covered >= self.jump_limit:
+                self.jumping = False
+                self.jump_covered = 0
+                self.xSpeed /= 2
+                self.jump_speed = 20
+
+            else: 
+                self.image = self.jumping_images[self.current_image]
+                self.image = pygame.transform.scale(self.image, [70, 100])
+                self.rect[1] -= self.jump_speed
+                self.jump_covered += self.jump_speed
+                self.jump_speed -= 1
+
+                if self.last_button == 'a':
+                    self.image = pygame.transform.flip(self.image, True, False)
+
+                if self.rect[0] < self.gamedata['screen_width']/2:
+                    self.rect[0] += self.xSpeed
+
+            return
+        else:
+            self.current_image = (self.current_image + 1) %10
+
+
+        if falling:
+            self.rect[1] += 3
+            self.image = self.falling_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [70, 100])
+
 
         key = pygame.key.get_pressed()
 
         if key[pygame.K_d]:
+            self.last_button = 'd'
 
             if self.xSpeed < 10:
-                self.xSpeed += 1
+                self.xSpeed +=1
         elif key[pygame.K_a]:
-            
+            self.last_button = 'a'
+
             if self.xSpeed > -10:
                 self.xSpeed -= 1
-        else:
 
-            if self.xSpeed != 0 :
+        else: 
+            if self.xSpeed != 0 and not falling:
                 self.xSpeed = 0
 
 
-        self.current_image = (self.current_image + 1) % 10
+        if key[pygame.K_SPACE]:
+            if not falling and not self.attacking:
+                self.jumping = True
+                self.current_image = 0
+
+        if key[pygame.K_f]:
+            if not self.attacking and not falling: 
+                self.attacking = True
+                self.current_image = 0
 
 
-        if self.ySpeed == 0:
+        
+        if self.attacking:
 
+            if self.attacking_frames > 9:
+                self.attacking = False
+                self.attacking_frames = 0
+
+            else: 
+                self.image = self.attacking_images[self.attacking_frames]
+                self.image = pygame.transform.scale(self.image, [100, 100])
+                self.attacking_frames += 1
+                
+                if self.last_button == 'a':
+                    self.image = pygame.transform.flip(self.image, True, False)
+
+                return
+
+
+
+        if self.xSpeed == 0 and not falling:
+
+            self.image = self.idle_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [45, 100])
             
-            if self.xSpeed == 0:
-                self.image = self.idle_images[self.current_image]
-                self.image = pygame.transform.scale(self.image, [35, 70])
-                return 
-
-            self.image = self.run_images[self.current_image]
-            self.image = pygame.transform.scale(self.image, [50, 70])
-
-            if self.xSpeed > 0:
-
-                if self.rect[0] < self.gamedata['screen_width'] / 2:
-                    self.rect[0] += self.xSpeed
-
-            elif self.xSpeed < 0:
-
+            if self.last_button == 'a':
                 self.image = pygame.transform.flip(self.image, True, False)
 
-                if self.rect[0] < 1:
-                    self.xSpeed = 0
-                else:
-                    self.rect[0] += self.xSpeed
+            return
+            
+
+
+        if not falling:
+
+            self.image = self.run_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [70, 100])
+        
+
+        if self.xSpeed > 0:
+            if self.rect[0] <= self.gamedata['screen_width'] /2:
+                self.rect[0] += self.xSpeed
+
+            return
+
+        elif self.xSpeed < 0:
+
+            self.image = pygame.transform.flip(self.image, True, False)
+
+            if self.rect[0] < 1:
+                self.xSpeed = 0
+
+            else: 
+                self.rect[0] +=self.xSpeed
+
+            return

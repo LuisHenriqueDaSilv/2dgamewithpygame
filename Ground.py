@@ -13,9 +13,9 @@ class Ground(pygame.sprite.Sprite):
         self.rect = pygame.Rect(
             xpos,
             game_data['screen_height']-128,
-            100, 
-            100
-        )
-    
+            128,
+            128
+        ) 
+
     def update(self, speed):
         self.rect[0] -= speed
