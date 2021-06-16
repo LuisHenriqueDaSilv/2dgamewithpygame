@@ -78,6 +78,7 @@ while True:
         if player.attacking:
             pygame.sprite.groupcollide(playerGroup, zombieGroup, False, True)
         else: 
+            #add game over function here
             print('game over')
 
 
