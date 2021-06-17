@@ -90,12 +90,23 @@ class Player(pygame.sprite.Sprite):
 
         self.attacking = False
         self.attacking_frames = 0
+        self.last_wall = None
         
 
-    def update(self, falling=False):
+    def update(self, falling=False, wall_position=None):
+
+        if self.last_wall == None:
+            self.last_wall = wall_position
+        elif self.last_wall == wall_position:
+            self.xSpeed =0
+        elif wall_position == None:
+            self.last_wall = None
 
 
         if self.jumping:
+
+            if self.rect[0] < 1:
+                self.xSpeed = 0
 
             if self.current_image < 5:
                 self.current_image += 1
@@ -132,6 +143,7 @@ class Player(pygame.sprite.Sprite):
 
         key = pygame.key.get_pressed()
 
+
         if key[pygame.K_d]:
             self.last_button = 'd'
 
@@ -143,7 +155,8 @@ class Player(pygame.sprite.Sprite):
             if self.xSpeed > -10:
                 self.xSpeed -= 1
 
-        else: 
+        else:
+
             if self.xSpeed != 0 and not falling:
                 self.xSpeed = 0
 
@@ -195,14 +208,13 @@ class Player(pygame.sprite.Sprite):
             self.image = self.run_images[self.current_image]
             self.image = pygame.transform.scale(self.image, [70, 100])
         
-
-        if self.xSpeed > 0:
+        if self.xSpeed > 0 and self.last_wall != 'f':
             if self.rect[0] <= self.gamedata['screen_width'] /2:
                 self.rect[0] += self.xSpeed
 
             return
 
-        elif self.xSpeed < 0:
+        elif self.xSpeed < 0 and self.last_wall != 'b':
 
             self.image = pygame.transform.flip(self.image, True, False)
 

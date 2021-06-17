@@ -25,6 +25,16 @@ class Zombie(pygame.sprite.Sprite):
         self.current_image = 0
 
     def update(self, opponent, falling=False):
+
+        if self.rect[0] > opponent.rect[0] + (opponent.gamedata['screen_width']): #testing if the zombie is on the screen. If not, return
+            
+            if opponent.xSpeed > 0 and opponent.rect[0] >= opponent.gamedata['screen_width'] / 2:
+                self.rect[0] -= 10
+
+            return
+
+        if (self.rect[0]) < -(self.rect[2]): #testing if the zombie is on the screen. If not, return
+            return
         
         if falling:
             self.rect[1] += 3
@@ -36,7 +46,12 @@ class Zombie(pygame.sprite.Sprite):
 
         if opponent.rect[0] >= opponent.gamedata['screen_width'] / 2 and opponent.xSpeed > 0:
 
-            self.rect[0] += 1 - opponent.xSpeed /3
+            if opponent.rect[0] > self.rect[0]:
+                self.rect[0] -= 3 + opponent.xSpeed / 3
+
+            else: 
+                self.rect[0] -= 1 + opponent.xSpeed
+                self.image = pygame.transform.flip(self.image, True, False)
             
         else: 
 
@@ -44,7 +59,7 @@ class Zombie(pygame.sprite.Sprite):
                 self.rect[0] += 3
 
             else: 
-                self.rect[0] -= 3 + opponent.xSpeed / 4
+                self.rect[0] -= 3
                 self.image = pygame.transform.flip(self.image, True, False)
         
 
