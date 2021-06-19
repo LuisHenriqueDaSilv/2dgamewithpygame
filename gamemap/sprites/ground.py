@@ -2,9 +2,8 @@ import pygame
 
 class Ground(pygame.sprite.Sprite):
     
-    def __init__(self, game_data, xpos):
+    def __init__(self, xpos, ypos):
 
-        self.game_data =game_data
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.image.load('./assets/ground/Ground__01.png').convert_alpha()
@@ -12,7 +11,7 @@ class Ground(pygame.sprite.Sprite):
 
         self.rect = pygame.Rect(
             xpos,
-            game_data['screen_height']-128,
+            ypos,
             128,
             128
         ) 

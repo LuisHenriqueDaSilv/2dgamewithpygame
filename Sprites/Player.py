@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
         ]
 
 
-        self.image = self.idle_images[0]
+        self.image = pygame.transform.scale(self.idle_images[0], [70,100])
         self.rect = pygame.Rect(
             self.gamedata['screen_width'] / 2,
             self.gamedata['screen_height']-128-105, #screen height - ground height - Player height
@@ -98,7 +98,12 @@ class Player(pygame.sprite.Sprite):
         if self.last_wall == None:
             self.last_wall = wall_position
         elif self.last_wall == wall_position:
+
             self.xSpeed =0
+            self.jumping = False
+            self.jump_covered = 0
+            self.jump_speed = 20
+
         elif wall_position == None:
             self.last_wall = None
 
@@ -139,6 +144,8 @@ class Player(pygame.sprite.Sprite):
             self.rect[1] += 3
             self.image = self.falling_images[self.current_image]
             self.image = pygame.transform.scale(self.image, [70, 100])
+            if self.last_wall == 'b':
+                self.image = pygame.transform.flip(self.image, True, False)
 
 
         key = pygame.key.get_pressed()
@@ -147,11 +154,16 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_d]:
             self.last_button = 'd'
 
+            if self.xSpeed < 0:
+                self.xSpeed = 0
+
             if self.xSpeed < 10:
                 self.xSpeed +=1
         elif key[pygame.K_a]:
             self.last_button = 'a'
 
+            if self.xSpeed > 0:
+                self.xSpeed = 0
             if self.xSpeed > -10:
                 self.xSpeed -= 1
 
@@ -207,6 +219,9 @@ class Player(pygame.sprite.Sprite):
 
             self.image = self.run_images[self.current_image]
             self.image = pygame.transform.scale(self.image, [70, 100])
+
+            if self.last_wall == 'b':
+                self.image = pygame.transform.flip(self.image, True, False)
         
         if self.xSpeed > 0 and self.last_wall != 'f':
             if self.rect[0] <= self.gamedata['screen_width'] /2:
