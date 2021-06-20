@@ -33,10 +33,6 @@ BACKGROUND = pygame.transform.scale(
 
 clock = pygame.time.Clock()
 
-
-def is_off_screen(sprite):
-    return (sprite.rect[0]) < -(sprite.rect[2])
-
 def gameOver():
     print('gameover')
 
@@ -53,10 +49,8 @@ def startGame():
 
     zombieGroup = pygame.sprite.Group()
 
-    zombie1 = Zombie(400 , 1400)
-    zombie2 = Zombie(400, 3090)
-    zombieGroup.add(zombie2)
-    zombieGroup.add(zombie1)
+    zombie = Zombie(400 , 1400)
+    zombieGroup.add(zombie)
 
 
 
@@ -94,11 +88,6 @@ def startGame():
                 gameOver()
                 startGame()
                 break
-
-        for zombie_sprite in zombieGroup: 
-
-            if is_off_screen(zombie_sprite):
-                zombieGroup.remove(zombie_sprite)
 
         draw()
 

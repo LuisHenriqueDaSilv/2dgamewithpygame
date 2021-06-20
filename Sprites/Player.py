@@ -222,21 +222,14 @@ class Player(pygame.sprite.Sprite):
 
             if self.last_wall == 'b':
                 self.image = pygame.transform.flip(self.image, True, False)
-        
-        if self.xSpeed > 0 and self.last_wall != 'f':
-            if self.rect[0] <= self.gamedata['screen_width'] /2:
-                self.rect[0] += self.xSpeed
 
-            return
 
-        elif self.xSpeed < 0 and self.last_wall != 'b':
+        if self.xSpeed < 0 and self.last_wall != 'b':
 
             self.image = pygame.transform.flip(self.image, True, False)
 
-            if self.rect[0] < 1:
-                self.xSpeed = 0
+        if self.last_wall == 'b' and self.xSpeed < 0:
+            self.xSpeed =0
 
-            else: 
-                self.rect[0] +=self.xSpeed
-
-            return
+        elif self.last_wall == 'f' and self.xSpeed > 0:
+            self.xSpeed = 0
