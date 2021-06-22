@@ -2,9 +2,8 @@ import pygame
 
 class DirtBlock(pygame.sprite.Sprite):
 
-    def __init__(self, xpos, ypos,curve=False, inverted=False):
+    def __init__(self, group, xpos, ypos,curve=False, inverted=False):
 
-        pygame.sprite.Sprite.__init__(self)
 
 
         if curve:
@@ -18,6 +17,9 @@ class DirtBlock(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
 
         self.rect = pygame.Rect(xpos, ypos, 128, 128)
+        
+        pygame.sprite.Sprite.__init__(self, group)
+
 
 
     def update(self, speed):

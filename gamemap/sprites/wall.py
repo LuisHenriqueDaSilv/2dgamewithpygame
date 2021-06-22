@@ -1,9 +1,7 @@
 import pygame
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, xpos, ypos, ground=False, inverted=False):
-
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self,group, xpos, ypos, ground=False, inverted=False):
 
         self.ground = ground
 
@@ -18,6 +16,8 @@ class Wall(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, [128, 128])
 
         self.rect = pygame.Rect(xpos, ypos, 128, 128)
+
+        pygame.sprite.Sprite.__init__(self, group)
 
     def update(self, speed):
         self.rect[0] -= speed

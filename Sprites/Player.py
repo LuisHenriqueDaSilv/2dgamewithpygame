@@ -69,6 +69,19 @@ class Player(pygame.sprite.Sprite):
             pygame.image.load('./assets/player/jump/Jump__005.png').convert_alpha()
         ]
 
+        self.sliding_images = [
+            pygame.image.load('./assets/player/slide/Slide__000.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__001.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__002.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__003.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__004.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__005.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__006.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__007.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__008.png').convert_alpha(),
+            pygame.image.load('./assets/player/slide/Slide__009.png').convert_alpha()
+        ]
+
 
         self.image = pygame.transform.scale(self.idle_images[0], [70,100])
         self.rect = pygame.Rect(
@@ -91,6 +104,9 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.attacking_frames = 0
         self.last_wall = None
+
+        self.sliding = False
+
         
 
     def update(self, falling=False, wall_position=None):
@@ -98,11 +114,7 @@ class Player(pygame.sprite.Sprite):
         if self.last_wall == None:
             self.last_wall = wall_position
         elif self.last_wall == wall_position:
-
             self.xSpeed =0
-            self.jumping = False
-            self.jump_covered = 0
-            self.jump_speed = 20
 
         elif wall_position == None:
             self.last_wall = None
@@ -151,7 +163,41 @@ class Player(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
 
 
-        if key[pygame.K_d]:
+        if self.attacking:
+
+            if self.attacking_frames > 9:
+                self.attacking = False
+                self.attacking_frames = 0
+
+            else: 
+                self.image = self.attacking_images[self.attacking_frames]
+                self.image = pygame.transform.scale(self.image, [100, 110])
+                self.attacking_frames += 1
+                
+                if self.last_button == 'a':
+                    self.image = pygame.transform.flip(self.image, True, False)
+
+            return
+
+        elif self.sliding:
+
+            self.image = self.sliding_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [70,80])
+
+            if self.xSpeed > 0:
+                self.xSpeed -= 1
+            elif self.xSpeed < 0:
+                self.xSpeed += 1
+                self.image = pygame.transform.flip(self.image, True, False)
+
+            if self.xSpeed == 0:
+                print('a')
+                self.sliding = 0
+
+            return
+
+
+        if key[pygame.K_d] and not self.sliding:
             self.last_button = 'd'
 
             if self.xSpeed < 0:
@@ -159,7 +205,7 @@ class Player(pygame.sprite.Sprite):
 
             if self.xSpeed < 10:
                 self.xSpeed +=1
-        elif key[pygame.K_a]:
+        elif key[pygame.K_a] and not self.sliding:
             self.last_button = 'a'
 
             if self.xSpeed > 0:
@@ -169,7 +215,7 @@ class Player(pygame.sprite.Sprite):
 
         else:
 
-            if self.xSpeed != 0 and not falling:
+            if self.xSpeed != 0 and not falling and not self.sliding:
                 self.xSpeed = 0
 
 
@@ -179,27 +225,19 @@ class Player(pygame.sprite.Sprite):
                 self.current_image = 0
 
         if key[pygame.K_f]:
-            if not self.attacking and not falling: 
+            if not self.attacking and not falling and not self.sliding: 
                 self.attacking = True
                 self.current_image = 0
-
-
-        
-        if self.attacking:
-
-            if self.attacking_frames > 9:
-                self.attacking = False
-                self.attacking_frames = 0
-
-            else: 
-                self.image = self.attacking_images[self.attacking_frames]
-                self.image = pygame.transform.scale(self.image, [100, 100])
-                self.attacking_frames += 1
-                
-                if self.last_button == 'a':
-                    self.image = pygame.transform.flip(self.image, True, False)
-
-                return
+                self.xSpeed = 0
+        elif key[pygame.K_s] and self.xSpeed != 0:
+            if not self.attacking and not falling and not self.sliding:
+                self.current_image = 0
+                self.sliding = True
+                if self.xSpeed > 0:
+                    self.xSpeed = 20
+                else:
+                    self.xSpeed = -30
+            
 
 
 

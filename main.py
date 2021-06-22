@@ -6,6 +6,7 @@ from gamemap.gamemap import GameMap
 #Sprites
 from Sprites.Player import Player
 from Sprites.Zombie import Zombie
+from Sprites.Boss import Boss
 
 pygame.init()
 
@@ -21,15 +22,6 @@ screen = pygame.display.set_mode([
 ])
 
 pygame.display.set_caption('Ninja Saving The World (Game)') 
-
-BACKGROUND = pygame.image.load('./assets/background.png').convert_alpha()
-BACKGROUND = pygame.transform.scale(
-    BACKGROUND,
-    [
-        game_data['screen_width'],
-        game_data['screen_height']
-    ]
-)
 
 clock = pygame.time.Clock()
 
@@ -49,18 +41,25 @@ def startGame():
 
     zombieGroup = pygame.sprite.Group()
 
-    zombie = Zombie(400 , 1400)
-    zombieGroup.add(zombie)
+    Zombie(group=zombieGroup,xpos=29*128 , ypos=650-128-100)
+    Zombie(group=zombieGroup, xpos=(36*128) , ypos=650-128-100)
+    Zombie(group=zombieGroup,xpos=(37*128)-50 , ypos=650-128-100)
+    Zombie(group=zombieGroup,xpos=(37*128)-50, ypos=650-128-100)
+    Zombie(group=zombieGroup,xpos=(38*128)-10 , ypos=650-128-100)
+
+    bossGroup = pygame.sprite.Group()
+
+    boss = Boss(xpos=57*128,ypos=game_data['screen_height']-100-128)
+    bossGroup.add(boss)
 
 
 
     def draw():
 
-        screen.blit(BACKGROUND, (0,0))
-
         gamemap.draw()
         playerGroup.draw(screen)
         zombieGroup.draw(screen)
+        bossGroup.draw(screen)
 
 
     gameEnd = False
@@ -71,17 +70,16 @@ def startGame():
 
         clock.tick(30)
 
-        gamemap.update(playerGroup, zombieGroup)
+        gamemap.update(playerGroup, zombieGroup, bossGroup)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
                 gameEnd = True
                 break
             
         
         if pygame.sprite.groupcollide(playerGroup, zombieGroup, False, False):
-            if player.attacking:
+            if player.attacking or player.sliding:
                 pygame.sprite.groupcollide(playerGroup, zombieGroup, False, True)
             else:
                 gameEnd = True
