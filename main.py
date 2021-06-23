@@ -4,11 +4,11 @@ import time
 from gamemap.gamemap import GameMap
 
 #Sprites
-from Sprites.Player import Player
-from Sprites.Zombie import Zombie
-from Sprites.Boss import Boss
+from sprites.player import Player
+from sprites.zombie import Zombie
 
 pygame.init()
+pygame.font.init()
 
 
 game_data = {
@@ -26,8 +26,15 @@ pygame.display.set_caption('Ninja Saving The World (Game)')
 clock = pygame.time.Clock()
 
 def gameOver():
-    print('gameover')
 
+    font = pygame.font.SysFont("./assets/fonts/FFF_Tusj.ttf", 100)
+    textSurf = font.render("Game over", True, (50, 168, 60))
+
+    print('Gameover')
+
+    screen.blit(textSurf, [400, game_data['screen_height']-128])
+    pygame.display.flip()
+    time.sleep(3)
 
 def startGame():
 
@@ -47,10 +54,6 @@ def startGame():
     Zombie(group=zombieGroup,xpos=(37*128)-50, ypos=650-128-100)
     Zombie(group=zombieGroup,xpos=(38*128)-10 , ypos=650-128-100)
 
-    bossGroup = pygame.sprite.Group()
-
-    boss = Boss(xpos=57*128,ypos=game_data['screen_height']-100-128)
-    bossGroup.add(boss)
 
 
 
@@ -59,10 +62,9 @@ def startGame():
         gamemap.draw()
         playerGroup.draw(screen)
         zombieGroup.draw(screen)
-        bossGroup.draw(screen)
 
 
-    gameEnd = False
+    gameEnd = False        
 
 
     while not gameEnd:
@@ -70,7 +72,7 @@ def startGame():
 
         clock.tick(30)
 
-        gamemap.update(playerGroup, zombieGroup, bossGroup)
+        gamemap.update(playerGroup, zombieGroup)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -7,40 +7,41 @@ class Zombie(pygame.sprite.Sprite):
 
 
         self.walking_images = [
-            pygame.image.load('./assets/zombie/walk/Walk__0.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__1.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__2.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__3.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__4.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__5.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__6.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__7.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__8.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/walk/Walk__9.png').convert_alpha()
+            pygame.image.load('./assets/zombie/walk/Walk_1.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_1.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_2.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_3.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_4.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_5.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_6.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_7.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_8.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_9.png').convert_alpha(),
+            pygame.image.load('./assets/zombie/walk/Walk_10.png').convert_alpha(),
         ]
 
         self.idle_images = [
-            pygame.image.load('./assets/zombie/idle/Idle__01.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__02.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__03.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__04.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__05.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__06.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__07.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__08.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__09.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__10.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__11.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__12.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__13.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__14.png').convert_alpha(),
-            pygame.image.load('./assets/zombie/idle/Idle__15.png').convert_alpha()
+            pygame.image.load('./assets/zombie/idle/Idle_1.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_2.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_3.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_4.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_5.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_6.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_7.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_8.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_9.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_10.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_11.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_12.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_13.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_14.png'),
+            pygame.image.load('./assets/zombie/idle/Idle_15.png')
 
         ]
 
         self.image = self.walking_images[0]
         self.image = pygame.transform.scale(self.image, [70, 100])
-        self.rect = pygame.Rect(xpos, ypos, 50, 100)
+        self.rect = pygame.Rect(xpos, ypos, 70, 100)
         self.current_image = 0
 
         pygame.sprite.Sprite.__init__(self, group)
@@ -86,6 +87,14 @@ class Zombie(pygame.sprite.Sprite):
                     else:
                         self.rect[0] -= 5
 
+            elif wall_position == 'b':
+
+                if opponent.rect[0] <= self.rect[0]:
+                    if opponent.xSpeed < 0:
+                        self.rect[0] -= opponent.xSpeed
+                else:
+                    if opponent.xSpeed < 0:
+                        self.rect[0] -= opponent.xSpeed
             else:
                 if opponent.rect[0] >= self.rect[0]:
 
