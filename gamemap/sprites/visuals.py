@@ -28,7 +28,7 @@ class Tree(pygame.sprite.Sprite):
 
 
         self.image = pygame.image.load('./assets/visuals/Tree.png').convert_alpha()
-        self.rect = pygame.Rect(xpos, ypos, 286, 239)
+        self.rect = pygame.Rect(xpos, ypos -239, 286, 239)
 
         pygame.sprite.Sprite.__init__(self, group)
 
@@ -42,7 +42,7 @@ class Sign(pygame.sprite.Sprite):
 
 
         self.image = pygame.image.load('./assets/visuals/Sign.png').convert_alpha()
-        self.rect = pygame.Rect(xpos, ypos, 91, 93)
+        self.rect = pygame.Rect(xpos, ypos-93, 91, 93)
 
 
         self.font = pygame.font.SysFont("./assets/fonts/FFF_Tusj.ttf", 20)
@@ -69,7 +69,7 @@ class Bush(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, [100,64])
 
-        self.rect = pygame.Rect(xpos, ypos, 100, 64)
+        self.rect = pygame.Rect(xpos, ypos-64, 100, 64)
 
         pygame.sprite.Sprite.__init__(self, group)
 
@@ -82,7 +82,7 @@ class ArrowSign(pygame.sprite.Sprite):
 
         self.image = pygame.image.load('./assets/visuals/Arrow.png')
 
-        self.rect = pygame.Rect(xpos, ypos, 86, 87)
+        self.rect = pygame.Rect(xpos, ypos-87, 86, 87)
 
         if inverted:
             self.image = pygame.transform.flip(self.image, True, False)
@@ -103,7 +103,7 @@ class TombStone(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, [53, 76])
 
-        self.rect = pygame.Rect(xpos, ypos, 0, 0)
+        self.rect = pygame.Rect(xpos, ypos-76, 53, 76)
 
         pygame.sprite.Sprite.__init__(self, group)
 
@@ -117,7 +117,7 @@ class Skeleton(pygame.sprite.Sprite):
         self.image = pygame.image.load('./assets/visuals/Skeleton.png')
         self.image = pygame.transform.scale(self.image, [50, 25])
 
-        self.rect = pygame.Rect(xpos, ypos, 0,0)
+        self.rect = pygame.Rect(xpos, ypos-25, 50,25)
 
         if inverted:
             self.image = pygame.transform.flip(self.image, True, False)
@@ -127,7 +127,6 @@ class Skeleton(pygame.sprite.Sprite):
 
     def update(self, speed):
         self.rect[0] -= speed
-
 
 class Bone(pygame.sprite.Sprite):
     

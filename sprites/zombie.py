@@ -48,8 +48,6 @@ class Zombie(pygame.sprite.Sprite):
 
 
     def update(self, opponent, falling=False, wall_position=None):
-
-
         is_off_screen_and_front_player = self.rect[0] > opponent.rect[0] + (opponent.gamedata['screen_width']/2)
         is_off_screen_and_back_player = (self.rect[0]) < -(self.rect[2])
         
@@ -110,4 +108,3 @@ class Zombie(pygame.sprite.Sprite):
                         self.rect[0] += 5
                     else: 
                         self.rect[0] -= 5 + opponent.xSpeed * 0.7    
-

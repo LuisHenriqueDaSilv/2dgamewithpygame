@@ -86,8 +86,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.idle_images[0], [70,100])
         self.rect = pygame.Rect(
             self.gamedata['screen_width'] / 2,
-            self.gamedata['screen_height']-128-105, #screen height - ground height - Player height
-            30, 
+            self.gamedata['screen_height']-128-100, #screen height - ground height - Player height
+            70, 
             100 
 
         )
@@ -119,15 +119,19 @@ class Player(pygame.sprite.Sprite):
 
         if self.end:
             self.xSpeed = 0
-            self.rect[0] += 5 
+            self.rect[0] += 5
 
         if self.last_wall == None:
             self.last_wall = wall_position
         elif self.last_wall == wall_position:
             self.xSpeed =0
-
         elif wall_position == None:
             self.last_wall = None
+
+        if self.attacking:
+            self.rect[2] = 100
+        else:
+            self.rect[2] = 70
 
 
         if self.jumping:
@@ -147,6 +151,7 @@ class Player(pygame.sprite.Sprite):
             else: 
                 self.image = self.jumping_images[self.current_image]
                 self.image = pygame.transform.scale(self.image, [70, 100])
+
                 self.rect[1] -= self.jump_speed
                 self.jump_covered += self.jump_speed
                 self.jump_speed -= 1
@@ -166,6 +171,7 @@ class Player(pygame.sprite.Sprite):
             self.rect[1] += 3
             self.image = self.falling_images[self.current_image]
             self.image = pygame.transform.scale(self.image, [70, 100])
+            
             if self.last_wall == 'b':
                 self.image = pygame.transform.flip(self.image, True, False)
 
@@ -200,7 +206,7 @@ class Player(pygame.sprite.Sprite):
                 self.xSpeed += 0.5
                 self.image = pygame.transform.flip(self.image, True, False)
 
-            if (self.xSpeed > -5 and self.xSpeed <= 0) or (self.xSpeed < 5 and self.xSpeed >=0):#self.xSpeed == 0:
+            if (self.xSpeed > -5 and self.xSpeed <= 0) or (self.xSpeed < 5 and self.xSpeed >=0):
                 self.sliding = False
                 self.xSpeed = 0
 
