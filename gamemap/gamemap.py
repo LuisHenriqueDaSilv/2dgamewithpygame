@@ -13,6 +13,8 @@ from gamemap.mapConfig import level_1, level_1_visuals
 class GameMap():
 
     def __init__(self, gamedata, screen):
+        background_soud = pygame.mixer.music.load('./assets/audio/background.ogg')
+        pygame.mixer.music.play(-1)
 
         self.ground = Ground
 
@@ -143,7 +145,6 @@ class GameMap():
 
     def update(self, playerGroup, zombieGroup):
 
-
         player = playerGroup.sprites()[0]
 
 
@@ -152,58 +153,40 @@ class GameMap():
         if player_colliding_last_box:
             player.end = True
 
+
         player_colliding_ground = pygame.sprite.groupcollide(playerGroup, self.groundGroup, False, False)
         player_colliding_wall = pygame.sprite.groupcollide(playerGroup, self.wallGroup, False, False)
 
-        
-
-        if player_colliding_wall and player_colliding_ground:
+        if player_colliding_wall:
 
             for wall_sprite in self.wallGroup:
-                
+
                 player_colliding_in_this_wall = pygame.Rect.colliderect(wall_sprite.rect, player)
 
                 if player_colliding_in_this_wall:
 
+                    wall_position = None
+
+                    if player.rect[0] >= wall_sprite.rect[0]:
+                        wall_position='b'
+                    elif player.rect[0] <= wall_sprite.rect[0]+player.rect[2]:
+                        wall_position = 'f'
+
                     if wall_sprite.ground:
 
-                        if player.rect[1] +90 <= wall_sprite.rect[1]:
-                            player.update(falling=False)
+                        player_falling_in_ground =  player.rect[1] + player.rect[2]<= wall_sprite.rect[1]
+
+                        if player_falling_in_ground:
+                            player.update(falling=not player_falling_in_ground)
                         else:
-                            wall_position = 'b' if player.xSpeed < 0 else 'f'
-                            player.update(falling=False, wall_position=wall_position)
-
-                    else:
-                        wall_position = 'b' if player.xSpeed < 0 else 'f'
-
-                        player.update(falling=False, wall_position=wall_position)
+                            player.update(falling=not player_colliding_ground, wall_position=wall_position)
+                    else:    
+                        player.update(falling=not player_colliding_ground, wall_position=wall_position)
 
                     break
-        elif player_colliding_wall:
 
-            
-            for wall_sprite in self.wallGroup:
-                
-                player_colliding_in_this_wall = pygame.Rect.colliderect(wall_sprite.rect, player)
-
-                if player_colliding_in_this_wall:
-
-                    if wall_sprite.ground:
-                        
-                        if player.rect[1] +90 <= wall_sprite.rect[1]:
-                            player.update(falling=False)
-                        else:
-                            wall_position = 'b' if player.xSpeed < 0 else 'f'
-                            player.update(falling=True, wall_position=wall_position)
-
-                    else:
-                        wall_position = 'b' if player.xSpeed < 0 else 'f'
-
-                        player.update(falling=True, wall_position=wall_position)
-        elif player_colliding_ground:
-            playerGroup.update(falling=False)
-        else: 
-            playerGroup.update(falling=True)
+        else:
+            player.update(falling=not player_colliding_ground)
 
 
         for zombie_sprite in zombieGroup:
@@ -211,23 +194,31 @@ class GameMap():
             zombie_colliding_ground = pygame.sprite.spritecollide(zombie_sprite, self.groundGroup, False)
             zombie_colliding_wall = pygame.sprite.spritecollide(zombie_sprite, self.wallGroup, False)
 
-            if zombie_colliding_wall and zombie_colliding_ground:
-                if zombie_sprite.rect[0] <= player.rect[0]:
-                    zombie_sprite.update(falling=False, opponent=player, wall_position='f')
-                else:
-                    zombie_sprite.update(falling=False, opponent=player, wall_position='b')
+            if zombie_colliding_wall:
 
-            elif zombie_colliding_wall:
+                for wall_sprite in self.wallGroup:
 
-                if zombie_sprite.rect[0] < player.rect[0]:
-                    zombie_sprite.update(falling=False, opponent=player, wall_position='f')
-                else:
-                    zombie_sprite.update(falling=False, opponent=player, wall_position='b')
+                    zombie_colliding_in_this_wall = pygame.Rect.colliderect(wall_sprite.rect, zombie_sprite.rect)
 
-            elif zombie_colliding_ground:
-                zombie_sprite.update(falling=False, opponent=player)
+                    if zombie_colliding_in_this_wall:
+
+                        wall_position = None
+
+                        if zombie_sprite.rect[0] >= wall_sprite.rect[0]:
+                            wall_position='b'
+                        elif zombie_sprite.rect[0] <= wall_sprite.rect[0]+zombie_sprite.rect[2]:
+                            wall_position = 'f'
+
+                        if zombie_colliding_ground:
+                            zombie_sprite.update(falling=False, opponent=player,wall_position=wall_position)
+                        else:
+                            zombie_sprite.update(falling=not wall_sprite.ground, opponent=player,wall_position=wall_position)
+
+                        break
+
             else:
-                zombie_sprite.update(falling=True, opponent=player)
+                zombie_sprite.update(falling=not zombie_colliding_ground, opponent=player)
+
 
         self.groundGroup.update(player.xSpeed)
         self.wallGroup.update(player.xSpeed)

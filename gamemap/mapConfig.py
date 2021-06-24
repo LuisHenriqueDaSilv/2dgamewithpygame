@@ -264,7 +264,7 @@ level_1_visuals = [
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 500,
-        "text":"S: Fast Attack (need running)",
+        "text":"S: Fast Attack (running)",
         "color": [255, 255,255]
     },
     {

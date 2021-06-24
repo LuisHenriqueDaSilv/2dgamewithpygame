@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(
             self.gamedata['screen_width'] / 2,
             self.gamedata['screen_height']-128-100, #screen height - ground height - Player height
-            70, 
+            100, 
             100 
 
         )
@@ -242,6 +242,7 @@ class Player(pygame.sprite.Sprite):
 
 
         player_speed_in_limit = self.xSpeed == 10 or self.xSpeed == -10
+
         if key[pygame.K_f]:
             if not self.attacking and not falling and not self.sliding: 
                 self.attacking = True
@@ -256,8 +257,6 @@ class Player(pygame.sprite.Sprite):
                     self.xSpeed = 15
                 else:
                     self.xSpeed = -15
-            
-
 
 
         if self.xSpeed == 0 and not falling and not self.end:

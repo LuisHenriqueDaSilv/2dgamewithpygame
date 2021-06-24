@@ -48,20 +48,9 @@ class Zombie(pygame.sprite.Sprite):
 
 
     def update(self, opponent, falling=False, wall_position=None):
+
         is_off_screen_and_front_player = self.rect[0] > opponent.rect[0] + (opponent.gamedata['screen_width']/2)
         is_off_screen_and_back_player = (self.rect[0]) < -(self.rect[2])
-        
-        if falling:
-            self.rect[1] += 3
-
-        if wall_position != None:
-            self.current_image = (self.current_image + 1) % 15
-            self.image = self.idle_images[self.current_image]
-            self.image = pygame.transform.scale(self.image, [70, 100])
-        else:
-            self.current_image = (self.current_image + 1) % 10
-            self.image = self.walking_images[self.current_image]
-            self.image = pygame.transform.scale(self.image, [70, 100])
 
 
         if is_off_screen_and_front_player: 
@@ -71,40 +60,69 @@ class Zombie(pygame.sprite.Sprite):
             self.rect[0] -= opponent.xSpeed
             return
 
-        else:
+        
+        if falling:
+            self.rect[1] += 5
 
+
+        if wall_position == None:
+            self.current_image = (self.current_image + 1) % 10
+            self.image = self.walking_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [70, 100])
+        else:            
+            self.current_image = (self.current_image + 1) % 15
+            self.image = self.idle_images[self.current_image]
+            self.image = pygame.transform.scale(self.image, [70, 100])
+
+
+        if wall_position == None:
+
+            player_speed_is_bigger_zero = opponent.xSpeed > 0
+            player_speed_is_equals_zero = opponent.xSpeed == 0 
+
+            zombie_is_in_front = self.rect[0] > opponent.rect[0]
+
+            if player_speed_is_bigger_zero and zombie_is_in_front:
+                self.rect[0] -= 5 + opponent.xSpeed * 0.7
+                self.image = pygame.transform.flip(self.image, True, False)
+
+            elif player_speed_is_equals_zero and zombie_is_in_front:
+                self.rect[0] -= 5
+                self.image = pygame.transform.flip(self.image, True, False)
+
+            elif not player_speed_is_bigger_zero and zombie_is_in_front:
+                if opponent.xSpeed > -5:
+                    self.rect[0] -= opponent.xSpeed + 5
+                else:
+                    self.rect[0] -= opponent.xSpeed +5
+                self.image = pygame.transform.flip(self.image, True, False)
+
+            elif player_speed_is_bigger_zero and not zombie_is_in_front:
+
+                if opponent.xSpeed > 5:
+                    self.rect[0] -= opponent.xSpeed - 5
+                else:
+                    self.rect[0] -= opponent.xSpeed -5
+
+            elif player_speed_is_equals_zero and not zombie_is_in_front:
+                self.rect[0] += 5
+
+            elif not player_speed_is_bigger_zero and not zombie_is_in_front:
+                self.rect[0] += 5 - opponent.xSpeed * 0.7
+
+        else:
+            
             if wall_position == 'f':
                 
-                if opponent.rect[0] >= self.rect[0]:
-                    if opponent.xSpeed > 0:
-                        self.rect[0] -= opponent.xSpeed
+                if opponent.rect[0] > self.rect[0]:
+                    self.rect[0] -= opponent.xSpeed
                 else:
-                    if opponent.xSpeed > 0:
-                        self.rect[0] -= 5 - opponent.xSpeed * 0.7
-
-                    else:
-                        self.rect[0] -= 5
+                    self.rect[0] += 5
 
             elif wall_position == 'b':
-
-                if opponent.rect[0] <= self.rect[0]:
-                    if opponent.xSpeed < 0:
-                        self.rect[0] -= opponent.xSpeed
+                
+                if opponent.rect[0] < self.rect[0]:
+                    self.rect[0] -= opponent.xSpeed
                 else:
-                    if opponent.xSpeed < 0:
-                        self.rect[0] -= opponent.xSpeed
-            else:
-                if opponent.rect[0] >= self.rect[0]:
+                    self.rect[0] += 10
 
-                    if opponent.xSpeed > 0:
-                        self.rect[0] -= 5
-                    else: 
-                        self.rect[0] += 5 - opponent.xSpeed * 0.7
-                else: 
-
-                    self.image = pygame.transform.flip(self.image, True, False)
-
-                    if opponent.xSpeed < 0:
-                        self.rect[0] += 5
-                    else: 
-                        self.rect[0] -= 5 + opponent.xSpeed * 0.7    

@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 def gameOver():
 
     font = pygame.font.SysFont("./assets/fonts/FFF_Tusj.ttf", 100)
-    textSurf = font.render("Game over", True, (50, 168, 60))
+    textSurf = font.render("Game over", True, (201, 18, 49))
 
     print('Gameover')
 
