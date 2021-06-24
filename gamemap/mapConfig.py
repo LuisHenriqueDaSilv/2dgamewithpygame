@@ -164,28 +164,28 @@ level_1_visuals = [
         "type": "TextLine",
         "xpos": 11*128 + 50, 
         "ypos": 400,
-        "text":"Objetivo da missão:",
+        "text":" Mission Objective:",
         "color": [214, 63,49]
     },
     {
         "type": "TextLine",
         "xpos": 11*128, 
         "ypos": 425,
-        "text":"Atravessar o cemitério e extrair",
+        "text":"Cross the cemetery and extract",
         "color": [255, 255, 255]
     },
     {
         "type": "TextLine",
         "xpos": 11*128+50, 
         "ypos": 450,
-        "text":"a amostra do vírus",
+        "text":"the virus sample",
         "color": [255, 255,255]
     },
     {
         "type": "TextLine",
         "xpos": 11*128, 
         "ypos": 475,
-        "text":"para o desenvolvimento da cura.",
+        "text":"for the development of the cure.",
         "color": [255, 255,255]
     },
     {
@@ -236,7 +236,7 @@ level_1_visuals = [
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 400,
-        "text":"How player:",
+        "text":"How to play:",
         "color": [214, 63,49]
     },
     {

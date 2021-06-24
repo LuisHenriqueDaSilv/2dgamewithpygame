@@ -82,6 +82,25 @@ class Player(pygame.sprite.Sprite):
             pygame.image.load('./assets/player/slide/Slide_10.png').convert_alpha()
         ]
 
+        self.dying_images = [
+            pygame.image.load('./assets/player/dead/Dead_1.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_2.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_3.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_4.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_5.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_6.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_7.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_8.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_9.png').convert_alpha(),
+            pygame.image.load('./assets/player/dead/Dead_10.png').convert_alpha(),
+        ]
+
+
+        self.attacking_sound = pygame.mixer.Sound('./assets/audio/sword.ogg')
+        self.attacking_sound.set_volume(0.3)
+
+        self.sliding_sound = pygame.mixer.Sound('./assets/audio/sliding.wav')
+        self.sliding_sound.set_volume(0.5)
 
         self.image = pygame.transform.scale(self.idle_images[0], [70,100])
         self.rect = pygame.Rect(
@@ -95,7 +114,12 @@ class Player(pygame.sprite.Sprite):
         self.current_image = 0
         self.xSpeed = 0
 
+        self.died = False
+        self.dying = False
+        self.last_wall = None
+
         self.last_button = 'd'
+
         self.jumping = False
         self.jump_covered = 0
         self.jump_limit = 200
@@ -103,19 +127,34 @@ class Player(pygame.sprite.Sprite):
 
         self.attacking = False
         self.attacking_frames = 0
-        self.last_wall = None
+
 
         self.sliding = False
 
-        self.end = False
-
-        
+        self.end = False 
 
     def update(self, falling=False, wall_position=None):
 
-        if self.rect[0] > 1152:
+        if self.rect[0] > 1152: #player is off screen
             pygame.quit()
             return
+
+
+        if self.dying:
+
+            if self.current_image >= 9:
+                self.died = True
+            else: 
+                self.current_image = (self.current_image + 1) % 10
+
+                self.image = self.dying_images[self.current_image]
+                self.image = pygame.transform.scale(self.image, [100, 100])
+
+                if falling:
+                    self.rect[1] -= 10
+
+            return
+            
 
         if self.end:
             self.xSpeed = 0
@@ -185,11 +224,14 @@ class Player(pygame.sprite.Sprite):
                 self.attacking = False
                 self.attacking_frames = 0
 
+                if self.last_button == 'a':
+                    self.rect[0] += 50
+
             else: 
                 self.image = self.attacking_images[self.attacking_frames]
                 self.image = pygame.transform.scale(self.image, [100, 110])
                 self.attacking_frames += 1
-                
+
                 if self.last_button == 'a':
                     self.image = pygame.transform.flip(self.image, True, False)
 
@@ -245,12 +287,17 @@ class Player(pygame.sprite.Sprite):
 
         if key[pygame.K_f]:
             if not self.attacking and not falling and not self.sliding: 
+                self.attacking_sound.play()
                 self.attacking = True
                 self.current_image = 0
                 self.xSpeed = 0
+                if self.last_button == 'a':
+                    self.rect[0] -= 50
+                    self.image = pygame.transform.flip(self.image, True, False)
 
         elif key[pygame.K_s] and player_speed_in_limit:
             if not self.attacking and not falling and not self.sliding:
+                self.sliding_sound.play()
                 self.current_image = 0
                 self.sliding = True
                 if self.xSpeed > 0:
@@ -289,3 +336,9 @@ class Player(pygame.sprite.Sprite):
 
         elif self.last_wall == 'f' and self.xSpeed > 0:
             self.xSpeed = 0
+        
+        
+    def set_dying(self):
+        self.dying = True
+        self.xSpeed = 0
+        self.current_image = 0

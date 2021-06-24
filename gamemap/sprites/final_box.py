@@ -8,9 +8,9 @@ class FinalBox(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, group)
 
         self.font = pygame.font.SysFont("./assets/fonts/FFF_Tusj.ttf", 15)
-        self.textSurf = self.font.render("Amostra do virus", True, (255,255,255))
+        self.textSurf = self.font.render("Virus Sample", True, (255,255,255))
 
-        self.image.blit(self.textSurf, [12, 52])
+        self.image.blit(self.textSurf, [18, 52])
 
     def update(self, speed):
         self.rect[0] -= speed

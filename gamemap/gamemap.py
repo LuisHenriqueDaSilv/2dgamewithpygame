@@ -12,13 +12,11 @@ from gamemap.mapConfig import level_1, level_1_visuals
 
 class GameMap():
 
-    def __init__(self, gamedata, screen):
-        background_soud = pygame.mixer.music.load('./assets/audio/background.ogg')
-        pygame.mixer.music.play(-1)
+    def __init__(self, gamedata):
+
 
         self.ground = Ground
 
-        self.screen = screen
 
         self.screen_width = gamedata['screen_width']
         self.screen_height = gamedata['screen_height']
@@ -38,6 +36,13 @@ class GameMap():
                 self.screen_height
             ]
         )
+        
+        self.win_sound = pygame.mixer.Sound('./assets/audio/win.wav')
+        self.win_sound.set_volume(0.3)
+        
+        pygame.mixer.music.set_volume(0.7)
+        pygame.mixer.music.load('./assets/audio/background.ogg')
+        pygame.mixer.music.play(-1)
 
 
     def generate(self):
@@ -134,14 +139,14 @@ class GameMap():
                     color=sprite["color"]
                 )
 
-    def draw(self):
+    def draw(self, screen):
 
-        self.screen.blit(self.background, (0,0))
+        screen.blit(self.background, (0,0))
 
-        self.groundGroup.draw(self.screen)
-        self.wallGroup.draw(self.screen)
-        self.visualsGroup.draw(self.screen)
-        self.boxGroup.draw(self.screen)
+        self.groundGroup.draw(screen)
+        self.wallGroup.draw(screen)
+        self.visualsGroup.draw(screen)
+        self.boxGroup.draw(screen)
 
     def update(self, playerGroup, zombieGroup):
 
@@ -151,6 +156,8 @@ class GameMap():
         player_colliding_last_box = pygame.sprite.groupcollide(playerGroup, self.boxGroup, False, True)
 
         if player_colliding_last_box:
+            pygame.mixer.music.set_volume(0.2)
+            self.win_sound.play()
             player.end = True
 
 
@@ -174,7 +181,7 @@ class GameMap():
 
                     if wall_sprite.ground:
 
-                        player_falling_in_ground =  player.rect[1] + player.rect[2]<= wall_sprite.rect[1]
+                        player_falling_in_ground =  player.rect[1] + player.rect[3]-20<= wall_sprite.rect[1]
 
                         if player_falling_in_ground:
                             player.update(falling=not player_falling_in_ground)
@@ -187,6 +194,7 @@ class GameMap():
 
         else:
             player.update(falling=not player_colliding_ground)
+
 
 
         for zombie_sprite in zombieGroup:

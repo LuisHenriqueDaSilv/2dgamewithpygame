@@ -1,6 +1,6 @@
 import pygame
-import time
 
+#Gamemap
 from gamemap.gamemap import GameMap
 
 #Sprites
@@ -21,7 +21,7 @@ screen = pygame.display.set_mode([
         game_data['screen_height']
 ])
 
-pygame.display.set_caption('Ninja Saving The World (Game)') 
+pygame.display.set_caption('Ninja Saving The World (Game)')
 
 clock = pygame.time.Clock()
 
@@ -34,11 +34,10 @@ def gameOver():
 
     screen.blit(textSurf, [400, game_data['screen_height']-128])
     pygame.display.flip()
-    time.sleep(3)
 
 def startGame():
 
-    gamemap = GameMap(game_data, screen)
+    gamemap = GameMap(game_data)
 
     playerGroup = pygame.sprite.Group()
     player = Player(game_data)
@@ -56,13 +55,16 @@ def startGame():
 
     def draw():
 
-        gamemap.draw()
+        gamemap.draw(screen)
         playerGroup.draw(screen)
         zombieGroup.draw(screen)
 
     gameEnd = False        
 
     while not gameEnd:
+
+        draw()
+        pygame.display.flip()
 
         clock.tick(30)
 
@@ -71,32 +73,33 @@ def startGame():
                 gameEnd = True
                 break
 
+        if player.died:
+            gameEnd = True
+            gameOver()
+            startGame()
+            break
+        elif player.dying:
+            player.update()
+            continue
+
         gamemap.update(playerGroup, zombieGroup)
 
-            
-        
-        if pygame.sprite.groupcollide(playerGroup, zombieGroup, False, False):
+        player_group_colliding_zombie_group = pygame.sprite.groupcollide(playerGroup, zombieGroup, False, False)
+
+        if player_group_colliding_zombie_group:
+
             for zombie in zombieGroup:
-                if zombie.rect[0] >= player.rect[0] and zombie.rect[0] <= player.rect[0] -50 + player.rect[2]:
+
+                zombie_colliding_in_left = zombie.rect[0] >= player.rect[0] and zombie.rect[0] <= player.rect[0] -50 + player.rect[2]
+                zombie_colliding_in_right = zombie.rect[0] <= player.rect[0] and player.rect[0] <= zombie.rect[0] + zombie.rect[2] -25
+
+                if zombie_colliding_in_left or zombie_colliding_in_right:
 
                     if player.attacking or player.sliding:
                         pygame.sprite.groupcollide(playerGroup, zombieGroup, False, True)    
-                    else:   
-                        gameEnd = True
-                        gameOver()
-                        startGame()
-                        break
-                elif zombie.rect[0] <= player.rect[0] and player.rect[0] <= zombie.rect[0] + zombie.rect[2] -25:
-                    if player.attacking or player.sliding:
-                        pygame.sprite.groupcollide(playerGroup, zombieGroup, False, True)    
-                    else:   
-                        gameEnd = True
-                        gameOver()
-                        startGame()
-                        break
+                    else:
+                        player.set_dying()
 
-        draw()
-        pygame.display.flip()
 
 
 startGame()
