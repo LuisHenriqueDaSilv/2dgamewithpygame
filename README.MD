@@ -15,7 +15,7 @@
 ##### **Clone respository**
 
 ```bash
-git clone https://github.com/LuisHenriqueDaSilv/2Dpygame.git
+git clone https://github.com/LuisHenriqueDaSilv/2dgamewithpygame.git
 ```
 
 ##### **Enter the directory**
@@ -44,4 +44,4 @@ python3 main.py
 
 - All game audios, except background music, were downloaded from the [mixkit](https://mixkit.co/free-sound-effects/game/) website
 
-- The background sound was removed from [NO COPYRIGHT "PRESS START" ALBUM](https://www.youtube.com/watch?v=wo22yjg6s5Y&list=PL0PtQ0UacpsKPKJtYFlEn6Qaje1bmoKNO&index=1) from [Eric F. Ricci](https://www.youtube.com/channel/UCK_ZjO-bHQOpBwIQVmDZFzg/videos)
+- The background music was removed from [NO COPYRIGHT "PRESS START" ALBUM](https://www.youtube.com/watch?v=wo22yjg6s5Y&list=PL0PtQ0UacpsKPKJtYFlEn6Qaje1bmoKNO&index=1) from [Eric F. Ricci](https://www.youtube.com/channel/UCK_ZjO-bHQOpBwIQVmDZFzg/videos)
