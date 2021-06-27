@@ -215,7 +215,6 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
 
 
-        key = pygame.key.get_pressed()
 
 
         if self.attacking:
@@ -254,8 +253,9 @@ class Player(pygame.sprite.Sprite):
 
             return
 
+        key = pygame.key.get_pressed()
 
-        if key[pygame.K_d] and not self.sliding and not self.end:
+        if (key[pygame.K_d] or key[pygame.K_RIGHT]) and not self.sliding and not self.end:
             self.last_button = 'd'
 
             if self.xSpeed < 0:
@@ -263,7 +263,7 @@ class Player(pygame.sprite.Sprite):
 
             if self.xSpeed < 10:
                 self.xSpeed +=1
-        elif key[pygame.K_a] and not self.sliding and not self.end:
+        elif (key[pygame.K_a] or key[pygame.K_LEFT]) and not self.sliding and not self.end:
             self.last_button = 'a'
 
             if self.xSpeed > 0:
@@ -277,7 +277,7 @@ class Player(pygame.sprite.Sprite):
                 self.xSpeed = 0
 
 
-        if key[pygame.K_SPACE]:
+        if key[pygame.K_SPACE] or key[pygame.K_UP]:
             if not falling and not self.attacking and not self.sliding:
                 self.jumping = True
                 self.current_image = 0
@@ -285,7 +285,7 @@ class Player(pygame.sprite.Sprite):
 
         player_speed_in_limit = self.xSpeed == 10 or self.xSpeed == -10
 
-        if key[pygame.K_f]:
+        if key[pygame.K_LCTRL]:
             if not self.attacking and not falling and not self.sliding: 
                 self.attacking_sound.play()
                 self.attacking = True
@@ -295,7 +295,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect[0] -= 50
                     self.image = pygame.transform.flip(self.image, True, False)
 
-        elif key[pygame.K_s] and player_speed_in_limit:
+        elif (key[pygame.K_s] or key[pygame.K_DOWN]) and player_speed_in_limit:
             if not self.attacking and not falling and not self.sliding:
                 self.sliding_sound.play()
                 self.current_image = 0

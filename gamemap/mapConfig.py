@@ -243,28 +243,28 @@ level_1_visuals = [
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 425,
-        "text":"SPACE: Jump",
+        "text":"SPACE or UP: Jump",
         "color": [255, 255,255]
     },
     {
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 450,
-        "text":"A-D: Walk",
+        "text":"A-D or LEFT-RIGHT: Walk",
         "color": [255, 255,255]
     },
     {
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 475,
-        "text":"F: Attack",
+        "text":"LeftCtrl: Attack",
         "color": [255, 255,255]
     },
     {
         "type": "TextLine",
         "xpos": 3*128, 
         "ypos": 500,
-        "text":"S: Fast Attack (running)",
+        "text":"S or Down: Fast Attack (running)",
         "color": [255, 255,255]
     },
     {
